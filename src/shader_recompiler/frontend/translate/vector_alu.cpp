@@ -53,6 +53,8 @@ void Translator::EmitVectorAlu(const GcnInst& inst) {
         return V_CVT_F32_U32(inst);
     case Opcode::V_CVT_PKRTZ_F16_F32:
         return V_CVT_PKRTZ_F16_F32(inst);
+    case Opcode::V_CVT_PKNORM_U16_F32:
+        return V_CVT_PKNORM_U16_F32(inst);
     case Opcode::V_CVT_F32_F16:
         return V_CVT_F32_F16(inst);
     case Opcode::V_CVT_F16_F32:
@@ -349,6 +351,18 @@ void Translator::V_CVT_PKRTZ_F16_F32(const GcnInst& inst) {
     const IR::Value vec_f32 =
         ir.CompositeConstruct(GetSrc<IR::F32>(inst.src[0]), GetSrc<IR::F32>(inst.src[1]));
     ir.SetVectorReg(dst_reg, ir.PackHalf2x16(vec_f32));
+}
+
+void Translator::V_CVT_PKNORM_U16_F32(const GcnInst& inst) {
+    const IR::VectorReg dst_reg{inst.dst[0].code};
+    const IR::F32 src0_f32 = GetSrc<IR::F32>(inst.src[0]);
+    const IR::F32 src1_f32 = GetSrc<IR::F32>(inst.src[1]);
+    const IR::U32 norm0_u32 = ir.ConvertFToU(32, ir.FPMul(src0_f32, ir.Imm32(65535.0f)));
+    const IR::U32 norm1_u32 = ir.ConvertFToU(32, ir.FPMul(src1_f32, ir.Imm32(65535.0f)));
+    IR::U32 upper_shifted = ir.ShiftLeftLogical(norm1_u32, ir.Imm32(16));
+    IR::U32 packed_value = ir.BitwiseOr(upper_shifted, norm0_u32);
+    const IR::U32 packed_u32 = packed_value;
+    ir.SetVectorReg(dst_reg, packed_u32);
 }
 
 void Translator::V_CVT_F32_F16(const GcnInst& inst) {

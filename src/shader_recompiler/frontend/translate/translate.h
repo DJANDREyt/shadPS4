@@ -114,6 +114,7 @@ public:
     void V_SAD(const GcnInst& inst);
     void V_MAC_F32(const GcnInst& inst);
     void V_CVT_PKRTZ_F16_F32(const GcnInst& inst);
+    void V_CVT_PKNORM_U16_F32(const GcnInst& inst);
     void V_CVT_F32_F16(const GcnInst& inst);
     void V_CVT_F16_F32(const GcnInst& inst);
     void V_MUL_F32(const GcnInst& inst);
