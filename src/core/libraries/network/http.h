@@ -11,6 +11,19 @@ class SymbolsResolver;
 
 namespace Libraries::Http {
 
+    typedef struct SceHttpUriElement {
+    int opaque;
+    char* scheme;
+    char* username;
+    char* password;
+    char* hostname;
+    char* path;
+    char* query;
+    char* fragment;
+    unsigned short port;
+    unsigned char reserved[10];
+} SceHttpUriElement;
+
 int PS4_SYSV_ABI sceHttpAbortRequest();
 int PS4_SYSV_ABI sceHttpAbortRequestForce();
 int PS4_SYSV_ABI sceHttpAbortWaitRequest();
@@ -122,7 +135,8 @@ int PS4_SYSV_ABI sceHttpUriBuild();
 int PS4_SYSV_ABI sceHttpUriCopy();
 int PS4_SYSV_ABI sceHttpUriEscape();
 int PS4_SYSV_ABI sceHttpUriMerge();
-int PS4_SYSV_ABI sceHttpUriParse();
+int PS4_SYSV_ABI sceHttpUriParse(SceHttpUriElement* out, char* srcUrl, void* pool, uint32_t require,
+                                 uint32_t prepare);
 int PS4_SYSV_ABI sceHttpUriSweepPath();
 int PS4_SYSV_ABI sceHttpUriUnescape();
 int PS4_SYSV_ABI sceHttpWaitRequest();

@@ -566,8 +566,9 @@ int PS4_SYSV_ABI sceHttpUriMerge() {
     return ORBIS_OK;
 }
 
-int PS4_SYSV_ABI sceHttpUriParse() {
-    LOG_ERROR(Lib_Http, "(STUBBED) called");
+int PS4_SYSV_ABI sceHttpUriParse(SceHttpUriElement* out, char* srcUrl, void* pool, uint32_t require,
+                                 uint32_t prepare) {
+    LOG_ERROR(Lib_Http, "sceHttpUriParse: {}", srcUrl);
     return ORBIS_OK;
 }
 

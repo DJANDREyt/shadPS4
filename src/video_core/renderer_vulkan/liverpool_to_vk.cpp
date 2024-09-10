@@ -709,6 +709,29 @@ vk::ClearValue ColorBufferClearValue(const AmdGpu::Liverpool::ColorBuffer& color
         }
         break;
     }
+    case AmdGpu::NumberFormat::Float: {
+        // Assuming that `clear_word0` and `clear_word1` store 32-bit float components
+        switch (num_bits) {
+        case 128: { // 128-bit format (4x32-bit float components)
+            const float* clear_color = reinterpret_cast<const float*>(&c0);
+            color.float32 = std::array{
+                clear_color[comp_swap_alt ? 2 : 0],
+                clear_color[1],
+                clear_color[comp_swap_alt ? 0 : 2],
+                clear_color[3],
+            };
+            LOG_ERROR(Render_Vulkan,
+                      "converted 128 bits from float to clear color, clearcolor[1]: {}",
+                      clear_color[1]);
+            break;
+        }
+        default: {
+            LOG_ERROR(Render_Vulkan, "Missing clear color conversion for bits {}", num_bits);
+            break;
+        }
+        }
+        break;
+    }
     default: {
         LOG_ERROR(Render_Vulkan, "Missing clear color conversion for type {}",
                   color_buffer.info.number_type.Value());
@@ -717,6 +740,7 @@ vk::ClearValue ColorBufferClearValue(const AmdGpu::Liverpool::ColorBuffer& color
     }
     return {.color = color};
 }
+
 
 vk::SampleCountFlagBits NumSamples(u32 num_samples) {
     switch (num_samples) {

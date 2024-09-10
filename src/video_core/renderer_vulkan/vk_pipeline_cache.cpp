@@ -291,6 +291,19 @@ bool PipelineCache::RefreshGraphicsKey() {
         if (ShouldSkipShader(bininfo->shader_hash, "graphics")) {
             return false;
         }
+
+        auto hash = bininfo->shader_hash;
+        if (hash == 0xa0c6fc39a41edea4 || hash == 0x286c3780b854bf80 ||
+            hash == 0x2cfaf0f5d1b83d20 || hash == 0x4a5f3342487facb5 ||
+            hash == 0x769b0cb33091acad || hash == 0x651e3c8a57a272c1 ||
+            hash == 0xfbd828194758bfb0 || hash == 0x9196f9de6de00e87 ||
+            hash == 0xf2c10b82f1e33a20 || hash == 0x9F894F4E4ED26C77 ||
+            hash == 0x36ED9C6CC2CDF01A || hash == 0x571821A1D66E4C0F)
+        {
+            LOG_WARNING(Render_Vulkan, "Skipping shader with hash: 0x{:X}", hash);
+            return false;
+        }
+
         const auto stage = Shader::StageFromIndex(i);
         const auto params = Liverpool::GetParams(*pgm);
 
@@ -307,6 +320,8 @@ bool PipelineCache::RefreshGraphicsKey() {
             }
             return false;
         }
+
+        LOG_WARNING(Render_Vulkan, "GETTING PROGRAM FOR STAGE WITH HASH: 0x{:X}", hash);
 
         std::tie(infos[i], modules[i], key.stage_hashes[i]) = GetProgram(stage, params, binding);
     }
