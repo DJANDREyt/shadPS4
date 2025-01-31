@@ -6,7 +6,7 @@
 #include "common/bit_field.h"
 #include "common/types.h"
 
-constexpr u64 SCE_KERNEL_TOTAL_MEM = 68GB;
+constexpr u64 SCE_KERNEL_TOTAL_MEM = 8_GB;
 constexpr u64 SCE_KERNEL_TOTAL_MEM_PRO = 8_GB;
 
 constexpr u64 SCE_FLEXIBLE_MEMORY_BASE = 64_MB;
